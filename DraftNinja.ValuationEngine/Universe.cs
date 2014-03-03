@@ -12,11 +12,13 @@ namespace DraftNinja.ValuationEngine
     {
         protected Dictionary<string, Func<Universe<T>, double>> Precalculations;
         protected Dictionary<string, double?> PrecalculatedValues;
+        protected bool DirtyCalculationsFlag;
 
         public Universe()
         {
             Precalculations = new Dictionary<string, Func<Universe<T>, double>>();
             PrecalculatedValues = new Dictionary<string, double?>();
+            DirtyCalculationsFlag = false;
         }
 
         public void AddPrecalculation(string name, Func<Universe<T>, double> calculation)
@@ -57,6 +59,31 @@ namespace DraftNinja.ValuationEngine
         protected void Precalculate(string index)
         {
             PrecalculatedValues[index] = Precalculations[index](this);
+            DirtyCalculationsFlag = true;
+        }
+
+        public new void Add(T elem)
+        {
+            if (DirtyCalculationsFlag) ClearPrecalculations();
+            base.Add(elem);
+        }
+
+        public new void Remove(T elem)
+        {
+            if (DirtyCalculationsFlag) ClearPrecalculations();
+            base.Remove(elem);
+        }
+
+        public new void Clear()
+        {
+            if (DirtyCalculationsFlag) ClearPrecalculations();
+            base.Clear();
+        }
+
+        protected void ClearPrecalculations() 
+        {
+            PrecalculatedValues.Keys.ToList().ForEach(k => PrecalculatedValues[k] = null);
+            DirtyCalculationsFlag = false;
         }
 
     }
