@@ -24,6 +24,21 @@ namespace DraftNinja.ValuationEngine.Tests
             var universe = new Universe<Bowler> { bob, karen };
             universe.AddPrecalculation("average-score", u => (from p in u select p.AverageScore).Average());
             Assert.AreEqual(universe["average-score"], 100.0, MaximumDeltaBetweenEqualDoubles);
-        }       
+        }
+
+        [TestMethod]
+        public void TestLazyPrecalculationsWithLateAdd()
+        {
+            var bob = new Bowler("Bob", 90);
+            var karen = new Bowler("Karen", 110);
+
+            var universe = new Universe<Bowler> { bob, karen };
+            universe.AddPrecalculation("average-score", u => (from p in u select p.AverageScore).Average());
+            Assert.AreEqual(universe["average-score"], 100.0, MaximumDeltaBetweenEqualDoubles);
+
+            universe.Add(new Bowler("Chuck", 130));
+            Assert.AreEqual(universe["average-score"], 110.0, MaximumDeltaBetweenEqualDoubles);
+        }
+
     }
 }
