@@ -2,7 +2,7 @@
 This project contains the building blocks for more complex valuation and decision engines like the ones used in DraftNinja and HomeGame. The objects defined describe several core concepts used in these engines.
 
 ### Universe<T>
-A universe of objects is a collection of those objects and the functionality that supports complex and potentially processor-intensive valuation scenarios. Additionally, it extends IEnumerable<T> and can be used in LINQ queries.
+A universe of objects is a collection of those objects and the functionality that supports complex and potentially processor-intensive valuation scenarios. Additionally, it extends IQueryable<T> and can be used in LINQ queries.
 
 ### Comparative Valuation Engines
 A CVE is a an engine that generates object valuations in relation to a universe of those objects.
